@@ -1,0 +1,204 @@
+{
+  "agent": {
+    "name": "ASSESSMENT",
+    "description": "变电站风险评估智能体 — 基于规则引擎对采集数据进行多维风险评分",
+    "capabilities": [
+      "rule_based_assessment",
+      "multi_dim_risk_scoring",
+      "fault_pattern_recognition",
+      "trend_analysis"
+    ]
+  },
+  "prompts": {
+    "systemPrompt": "你是一个变电站风险评估专家智能体。基于规则引擎对采集数据进行多维风险评分，识别故障模式，分析趋势，输出风险等级和处置建议。",
+    "assessmentPrompt": "请根据以下采集数据进行风险评估：分析异常信号、匹配风险规则、计算风险评分、确定风险等级",
+    "recommendationPrompt": "请根据风险等级生成相应的处置建议"
+  },
+  "riskLevels": {
+    "1": {
+      "name": "低风险",
+      "description": "设备运行正常",
+      "minScore": 0,
+      "maxScore": 24,
+      "recommendation": "设备运行正常，维持常规巡检"
+    },
+    "2": {
+      "name": "中等风险",
+      "description": "存在中等风险",
+      "minScore": 25,
+      "maxScore": 49,
+      "recommendation": "存在中等风险，建议加强监测并安排检查"
+    },
+    "3": {
+      "name": "高风险",
+      "description": "高风险预警",
+      "minScore": 50,
+      "maxScore": 74,
+      "recommendation": "高风险预警，需立即派员现场处置"
+    },
+    "4": {
+      "name": "紧急",
+      "description": "紧急风险",
+      "minScore": 75,
+      "maxScore": 100,
+      "recommendation": "紧急！启动应急预案，联系调度中心"
+    }
+  },
+  "riskTypes": {
+    "device_fault": "设备故障风险",
+    "grid_operation": "电网运行风险",
+    "outage_risk": "停电事件风险",
+    "safety_work": "安全工作风险",
+    "normal": "正常运行"
+  },
+  "rules": [
+    {
+      "code": "RULE-TRANSFORMER-OVERHEAT",
+      "name": "变压器过热",
+      "riskType": "device_fault",
+      "condition": "anomalies.includes('transformer_overheat')",
+      "weight": 3.0,
+      "description": "变压器油温超过85°C"
+    },
+    {
+      "code": "RULE-WINDING-OVERHEAT",
+      "name": "绕组温度异常",
+      "riskType": "device_fault",
+      "condition": "anomalies.includes('winding_overheat')",
+      "weight": 3.5,
+      "description": "绕组温度超过105°C"
+    },
+    {
+      "code": "RULE-SWITCHGEAR-OVERHEAT",
+      "name": "开关柜过热",
+      "riskType": "device_fault",
+      "condition": "anomalies.includes('switchgear_overheat')",
+      "weight": 2.5,
+      "description": "开关柜温度超过70°C"
+    },
+    {
+      "code": "RULE-SF6-PRESSURE",
+      "name": "SF6气压异常",
+      "riskType": "device_fault",
+      "condition": "anomalies.includes('sf6_low_pressure')",
+      "weight": 4.0,
+      "description": "SF6气压低于0.5MPa"
+    },
+    {
+      "code": "RULE-PARTIAL-DISCHARGE",
+      "name": "局部放电检测",
+      "riskType": "device_fault",
+      "condition": "anomalies.includes('partial_discharge')",
+      "weight": 3.5,
+      "description": "局部放电超过100pC"
+    },
+    {
+      "code": "RULE-CB-FAULT",
+      "name": "断路器故障",
+      "riskType": "device_fault",
+      "condition": "anomalies.includes('circuit_breaker_fault')",
+      "weight": 4.5,
+      "description": "断路器故障信号"
+    },
+    {
+      "code": "RULE-ISOLATOR-FAULT",
+      "name": "隔离开关故障",
+      "riskType": "device_fault",
+      "condition": "anomalies.includes('isolator_fault')",
+      "weight": 3.0,
+      "description": "隔离开关故障信号"
+    },
+    {
+      "code": "RULE-OVERVOLTAGE",
+      "name": "母线过电压",
+      "riskType": "grid_operation",
+      "condition": "anomalies.includes('overvoltage')",
+      "weight": 2.5,
+      "description": "母线电压超过额定值110%"
+    },
+    {
+      "code": "RULE-UNDERVOLTAGE",
+      "name": "母线欠电压",
+      "riskType": "grid_operation",
+      "condition": "anomalies.includes('undervoltage')",
+      "weight": 2.0,
+      "description": "母线电压低于额定值90%"
+    },
+    {
+      "code": "RULE-OVERCURRENT",
+      "name": "线路过电流",
+      "riskType": "grid_operation",
+      "condition": "anomalies.includes('overcurrent')",
+      "weight": 3.0,
+      "description": "线路电流超过额定值120%"
+    },
+    {
+      "code": "RULE-LOW-PF",
+      "name": "功率因数偏低",
+      "riskType": "grid_operation",
+      "condition": "anomalies.includes('low_power_factor')",
+      "weight": 1.5,
+      "description": "功率因数低于0.85"
+    },
+    {
+      "code": "RULE-FREQ-DEVIATION",
+      "name": "系统频率偏差",
+      "riskType": "grid_operation",
+      "condition": "anomalies.includes('frequency_deviation')",
+      "weight": 2.5,
+      "description": "系统频率偏差超过±0.5Hz"
+    },
+    {
+      "code": "RULE-OVERLOAD",
+      "name": "设备过负荷",
+      "riskType": "grid_operation",
+      "condition": "anomalies.includes('overload') || (metrics.loadRate !== undefined && metrics.loadRate > 85)",
+      "weight": 3.0,
+      "description": "设备负荷率超过85%"
+    },
+    {
+      "code": "RULE-CRITICAL-OVERHEAT",
+      "name": "严重过热（停电风险）",
+      "riskType": "outage_risk",
+      "condition": "(metrics.transformerOilTemp ?? 0) > 95 || (metrics.windingTemp ?? 0) > 120",
+      "weight": 5.0,
+      "description": "变压器油温超过95°C或绕组温度超过120°C"
+    },
+    {
+      "code": "RULE-MULTI-FAULT",
+      "name": "多重故障叠加",
+      "riskType": "outage_risk",
+      "condition": "['circuit_breaker_fault', 'isolator_fault', 'sf6_low_pressure'].filter(x => anomalies.includes(x)).length >= 2",
+      "weight": 5.0,
+      "description": "同时存在2个及以上严重故障"
+    },
+    {
+      "code": "RULE-FIRE-ALARM",
+      "name": "火灾告警",
+      "riskType": "safety_work",
+      "condition": "anomalies.includes('fire_alarm')",
+      "weight": 5.0,
+      "description": "火灾告警信号"
+    },
+    {
+      "code": "RULE-UNAUTHORIZED",
+      "name": "非授权进入",
+      "riskType": "safety_work",
+      "condition": "anomalies.includes('unauthorized_access')",
+      "weight": 3.5,
+      "description": "非授权人员进入"
+    },
+    {
+      "code": "RULE-MISOPERATION",
+      "name": "误操作告警",
+      "riskType": "safety_work",
+      "condition": "anomalies.includes('misoperation')",
+      "weight": 4.0,
+      "description": "误操作告警信号"
+    }
+  ],
+  "scoring": {
+    "normalizationFactor": 3,
+    "description": "风险评分 = (总权重 / 最大理论权重) * 100 * 归一化因子，最高100分"
+  }
+}

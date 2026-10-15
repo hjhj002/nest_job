@@ -1,0 +1,29 @@
+.data-page {
+  padding-bottom: 24px;
+}
+
+.stats-row {
+  margin-bottom: 16px;
+}
+
+.stats-row .ant-card {
+  border-radius: 8px;
+}
+
+.filter-card {
+  margin-bottom: 16px;
+  border-radius: 8px;
+}
+
+.chart-tabs {
+  margin-top: 16px;
+}
+
+.chart-tabs .ant-card {
+  border-radius: 8px;
+}
+
+/* ECharts容器 */
+[data-echarts-instance] {
+  width: 100% !important;
+}

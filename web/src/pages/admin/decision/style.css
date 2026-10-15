@@ -1,0 +1,161 @@
+.decision-page {
+  padding-bottom: 24px;
+}
+
+.agent-status-row {
+  margin-bottom: 24px;
+}
+
+.agent-card {
+  border-radius: 8px;
+  height: 100%;
+}
+
+.agent-card .ant-card-head {
+  background: #f5f5f5;
+}
+
+.table-card {
+  border-radius: 8px;
+}
+
+/* 决策流程可视化 */
+.decision-detail {
+  padding: 16px 0;
+}
+
+.flow-visualization {
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.flow-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.flow-diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.flow-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 24px;
+  background: white;
+  border: 2px solid #d9d9d9;
+  border-radius: 8px;
+  min-width: 140px;
+  transition: all 0.3s;
+}
+
+.flow-node.active {
+  border-color: #1890ff;
+  box-shadow: 0 0 12px rgba(24, 144, 255, 0.3);
+}
+
+.flow-node.completed {
+  border-color: #52c41a;
+}
+
+.node-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.node-content {
+  text-align: center;
+}
+
+.node-name {
+  display: block;
+  font-size: 12px;
+  margin: 4px 0;
+}
+
+.flow-arrow {
+  font-size: 24px;
+  color: #d9d9d9;
+  transition: all 0.3s;
+}
+
+.flow-arrow.active {
+  color: #1890ff;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* 步骤详情 */
+.detail-steps {
+  margin-top: 24px;
+}
+
+.step-detail {
+  background: white;
+  padding: 16px;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+.io-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 12px 0;
+}
+
+.io-block {
+  background: #f5f5f5;
+  padding: 12px;
+  border-radius: 4px;
+}
+
+.io-block pre {
+  margin: 8px 0 0;
+  font-size: 12px;
+  background: white;
+  padding: 8px;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.time-info {
+  font-size: 12px;
+}
+
+/* 决策结果 */
+.decision-result {
+  margin-top: 24px;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .flow-diagram {
+    flex-direction: column;
+  }
+
+  .flow-arrow {
+    transform: rotate(90deg);
+  }
+
+  .io-section {
+    grid-template-columns: 1fr;
+  }
+}

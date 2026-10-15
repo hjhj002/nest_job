@@ -1,0 +1,91 @@
+export const EvidenceStorageABI = [
+  {
+    type: 'constructor',
+    stateMutability: 'nonpayable',
+    inputs: [],
+  },
+  {
+    type: 'event',
+    name: 'EvidenceStored',
+    inputs: [
+      { name: 'evidenceId', type: 'string', indexed: true },
+      { name: 'riskEventNo', type: 'string', indexed: true },
+      { name: 'dataHash', type: 'string', indexed: false },
+      { name: 'timestamp', type: 'uint256', indexed: false },
+    ],
+  },
+  {
+    type: 'function',
+    name: 'storeEvidence',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: '_evidenceId', type: 'string' },
+      { name: '_riskEventNo', type: 'string' },
+      { name: '_dataHash', type: 'string' },
+      { name: '_dataType', type: 'string' },
+      { name: '_operator', type: 'string' },
+    ],
+    outputs: [{ name: '', type: 'bool' }],
+  },
+  {
+    type: 'function',
+    name: 'getEvidence',
+    stateMutability: 'view',
+    inputs: [{ name: '_evidenceId', type: 'string' }],
+    outputs: [
+      { name: 'evidenceId', type: 'string' },
+      { name: 'riskEventNo', type: 'string' },
+      { name: 'dataHash', type: 'string' },
+      { name: 'dataType', type: 'string' },
+      { name: 'timestamp', type: 'uint256' },
+      { name: 'operator', type: 'string' },
+    ],
+  },
+  {
+    type: 'function',
+    name: 'verifyByHash',
+    stateMutability: 'view',
+    inputs: [{ name: '_dataHash', type: 'string' }],
+    outputs: [
+      { name: 'exists', type: 'bool' },
+      { name: 'evidenceId', type: 'string' },
+      { name: 'timestamp', type: 'uint256' },
+    ],
+  },
+  {
+    type: 'function',
+    name: 'getAllEvidenceIds',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ name: '', type: 'string[]' }],
+  },
+  {
+    type: 'function',
+    name: 'getEvidencePage',
+    stateMutability: 'view',
+    inputs: [
+      { name: '_offset', type: 'uint256' },
+      { name: '_limit', type: 'uint256' },
+    ],
+    outputs: [
+      { name: 'ids', type: 'string[]' },
+      { name: 'riskEventNos', type: 'string[]' },
+      { name: 'dataHashes', type: 'string[]' },
+      { name: 'timestamps', type: 'uint256[]' },
+    ],
+  },
+  {
+    type: 'function',
+    name: 'evidenceCount',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ name: '', type: 'uint256' }],
+  },
+  {
+    type: 'function',
+    name: 'admin',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ name: '', type: 'address' }],
+  },
+];

@@ -1,0 +1,89 @@
+.device-page {
+  padding-bottom: 24px;
+}
+
+.stats-row {
+  margin-bottom: 16px;
+}
+
+.stats-row .ant-card {
+  border-radius: 8px;
+}
+
+.filter-card {
+  margin-bottom: 16px;
+  border-radius: 8px;
+}
+
+.table-card {
+  border-radius: 8px;
+}
+
+.device-detail {
+  padding: 16px 0;
+}
+
+.history-section {
+  margin-top: 24px;
+}
+
+.history-chart-placeholder {
+  background: #f5f5f5;
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.mock-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 16px;
+  height: 150px;
+  margin-top: 16px;
+  width: 100%;
+}
+
+.mock-bar {
+  width: 40px;
+  background: linear-gradient(to top, #1890ff, #69c0ff);
+  border-radius: 4px 4px 0 0;
+  min-height: 20px;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.mock-bar:hover {
+  opacity: 0.8;
+}
+
+.mock-value {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: #666;
+}
+
+/* 表格状态样式 */
+.ant-badge-status-success {
+  background-color: #52c41a;
+}
+
+.ant-badge-status-warning {
+  background-color: #faad14;
+}
+
+.ant-badge-status-error {
+  background-color: #ff4d4f;
+}
+
+.ant-badge-status-default {
+  background-color: #d9d9d9;
+}

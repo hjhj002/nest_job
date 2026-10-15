@@ -1,0 +1,60 @@
+.blockchain-page {
+  padding-bottom: 24px;
+}
+
+.stats-row {
+  margin: 16px 0;
+}
+
+.stats-row .ant-card {
+  border-radius: 8px;
+}
+
+.filter-card {
+  margin-bottom: 16px;
+  border-radius: 8px;
+}
+
+.table-card {
+  border-radius: 8px;
+}
+
+/* Hash显示 */
+.hash-display {
+  word-break: break-all;
+}
+
+.hash-display .ant-typography {
+  font-size: 12px;
+}
+
+/* 存证详情 */
+.record-detail {
+  padding: 16px 0;
+}
+
+.verify-info {
+  margin-top: 24px;
+}
+
+.verify-info .ant-timeline {
+  margin-top: 16px;
+}
+
+.security-note {
+  margin-top: 24px;
+  padding: 16px;
+  background: #f6ffed;
+  border: 1px solid #b7eb8f;
+  border-radius: 8px;
+}
+
+/* 区块链主题色 */
+.blockchain-theme {
+  color: #722ed1;
+}
+
+/* 表格中的Hash */
+.ant-table-cell .ant-typography {
+  font-family: 'Monaco', 'Menlo', monospace;
+}

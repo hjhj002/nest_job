@@ -1,0 +1,347 @@
+{
+  "agent": {
+    "name": "DECISION",
+    "description": "变电站风控决策智能体：根据风险类型和等级匹配处置策略，触发告警、上链存证及人工介入流程",
+    "capabilities": [
+      "strategy_matching",
+      "alert_dispatch",
+      "blockchain_evidence",
+      "escalation_handling"
+    ]
+  },
+  "prompts": {
+    "systemPrompt": "你是一个变电站风控决策专家智能体。根据风险评估结果，匹配最优处置策略，决定是否需要触发告警、上链存证、人工介入等操作。",
+    "decisionPrompt": "请根据以下风险评估结果，选择最合适的处置策略",
+    "escalationPrompt": "请判断是否需要升级处理或人工介入"
+  },
+  "riskTypes": {
+    "device_fault": {
+      "name": "设备故障风险",
+      "description": "变压器、断路器等设备故障"
+    },
+    "grid_operation": {
+      "name": "电网运行风险",
+      "description": "电压、频率、负荷等电网参数异常"
+    },
+    "outage_risk": {
+      "name": "停电事件风险",
+      "description": "可能导致停电的风险"
+    },
+    "safety_work": {
+      "name": "安全工作风险",
+      "description": "火灾、非授权进入等安全事件"
+    },
+    "unknown": {
+      "name": "未知风险类型",
+      "description": "无法识别的风险类型，使用通用策略"
+    }
+  },
+  "channels": {
+    "system_log": {
+      "name": "系统日志",
+      "description": "记录到系统日志"
+    },
+    "email": {
+      "name": "邮件通知",
+      "description": "发送邮件通知"
+    },
+    "sms": {
+      "name": "短信通知",
+      "description": "发送短信通知"
+    },
+    "push": {
+      "name": "推送通知",
+      "description": "APP推送通知"
+    },
+    "dispatch": {
+      "name": "调度通知",
+      "description": "通知调度中心"
+    }
+  },
+  "strategyMatrix": {
+    "device_fault": {
+      "1": {
+        "code": "DF-L1",
+        "name": "设备轻微异常-监控策略",
+        "measures": [
+          "记录异常日志",
+          "加密巡检频率",
+          "通知运维班组"
+        ],
+        "channels": ["system_log", "email"],
+        "blockchainRequired": false,
+        "triggerAlert": false,
+        "requireManual": false
+      },
+      "2": {
+        "code": "DF-L2",
+        "name": "设备中级故障-预警策略",
+        "measures": [
+          "触发运维预警",
+          "安排定检计划",
+          "备品备件准备",
+          "通知值班长"
+        ],
+        "channels": ["system_log", "email", "sms"],
+        "blockchainRequired": false,
+        "triggerAlert": true,
+        "requireManual": false
+      },
+      "3": {
+        "code": "DF-L3",
+        "name": "设备严重故障-应急策略",
+        "measures": [
+          "立即告警",
+          "申请停电检修",
+          "隔离故障设备",
+          "启动应急预案",
+          "上链存证"
+        ],
+        "channels": ["system_log", "email", "sms", "push"],
+        "blockchainRequired": true,
+        "triggerAlert": true,
+        "requireManual": true
+      },
+      "4": {
+        "code": "DF-L4",
+        "name": "设备紧急故障-跳闸策略",
+        "measures": [
+          "立即保护跳闸",
+          "隔离故障区段",
+          "紧急通报调度",
+          "启动事故处置流程",
+          "上链存证",
+          "向上级汇报"
+        ],
+        "channels": ["system_log", "email", "sms", "push", "dispatch"],
+        "blockchainRequired": true,
+        "triggerAlert": true,
+        "requireManual": true
+      }
+    },
+    "grid_operation": {
+      "1": {
+        "code": "GO-L1",
+        "name": "电网运行偏差-观察策略",
+        "measures": [
+          "记录运行参数",
+          "持续监测电压/频率趋势"
+        ],
+        "channels": ["system_log"],
+        "blockchainRequired": false,
+        "triggerAlert": false,
+        "requireManual": false
+      },
+      "2": {
+        "code": "GO-L2",
+        "name": "电网参数异常-调整策略",
+        "measures": [
+          "通知调度中心",
+          "执行无功补偿调节",
+          "监控负荷变化",
+          "记录调度日志"
+        ],
+        "channels": ["system_log", "email", "sms"],
+        "blockchainRequired": false,
+        "triggerAlert": true,
+        "requireManual": false
+      },
+      "3": {
+        "code": "GO-L3",
+        "name": "电网高风险-干预策略",
+        "measures": [
+          "启动电压紧急调节",
+          "限制高负荷线路",
+          "上报调度室",
+          "上链存证"
+        ],
+        "channels": ["system_log", "email", "sms", "push"],
+        "blockchainRequired": true,
+        "triggerAlert": true,
+        "requireManual": true
+      },
+      "4": {
+        "code": "GO-L4",
+        "name": "电网紧急事件-切除策略",
+        "measures": [
+          "执行紧急减载",
+          "切除非重要负荷",
+          "启动黑启动预案",
+          "紧急通报省调",
+          "上链存证"
+        ],
+        "channels": ["system_log", "email", "sms", "push", "dispatch"],
+        "blockchainRequired": true,
+        "triggerAlert": true,
+        "requireManual": true
+      }
+    },
+    "outage_risk": {
+      "1": {
+        "code": "OR-L1",
+        "name": "低停电风险-跟踪策略",
+        "measures": [
+          "记录风险点",
+          "纳入隐患台账"
+        ],
+        "channels": ["system_log", "email"],
+        "blockchainRequired": false,
+        "triggerAlert": false,
+        "requireManual": false
+      },
+      "2": {
+        "code": "OR-L2",
+        "name": "停电风险中级-预控策略",
+        "measures": [
+          "制定停电防范方案",
+          "提前通知用户侧",
+          "备用电源检查"
+        ],
+        "channels": ["system_log", "email", "sms"],
+        "blockchainRequired": false,
+        "triggerAlert": true,
+        "requireManual": false
+      },
+      "3": {
+        "code": "OR-L3",
+        "name": "停电风险高级-倒闸策略",
+        "measures": [
+          "执行倒闸操作",
+          "转移负荷",
+          "启用备自投",
+          "上链存证"
+        ],
+        "channels": ["system_log", "email", "sms", "push"],
+        "blockchainRequired": true,
+        "triggerAlert": true,
+        "requireManual": true
+      },
+      "4": {
+        "code": "OR-L4",
+        "name": "大面积停电风险-应急响应策略",
+        "measures": [
+          "启动大面积停电应急预案",
+          "协调政府及相关单位",
+          "恢复供电优先级排序",
+          "媒体通报",
+          "上链存证"
+        ],
+        "channels": ["system_log", "email", "sms", "push", "dispatch"],
+        "blockchainRequired": true,
+        "triggerAlert": true,
+        "requireManual": true
+      }
+    },
+    "safety_work": {
+      "1": {
+        "code": "SW-L1",
+        "name": "安全隐患-登记策略",
+        "measures": [
+          "登记安全隐患",
+          "纳入整改计划"
+        ],
+        "channels": ["system_log", "email"],
+        "blockchainRequired": false,
+        "triggerAlert": false,
+        "requireManual": false
+      },
+      "2": {
+        "code": "SW-L2",
+        "name": "安全违规-警示策略",
+        "measures": [
+          "触发安全预警",
+          "通知安监人员",
+          "暂停相关作业"
+        ],
+        "channels": ["system_log", "email", "sms"],
+        "blockchainRequired": false,
+        "triggerAlert": true,
+        "requireManual": true
+      },
+      "3": {
+        "code": "SW-L3",
+        "name": "安全事故苗头-管控策略",
+        "measures": [
+          "立即停工",
+          "疏散现场人员",
+          "通知安全主管",
+          "上链存证"
+        ],
+        "channels": ["system_log", "email", "sms", "push"],
+        "blockchainRequired": true,
+        "triggerAlert": true,
+        "requireManual": true
+      },
+      "4": {
+        "code": "SW-L4",
+        "name": "安全紧急事件-救援策略",
+        "measures": [
+          "启动应急救援",
+          "拨打 119/120",
+          "切断相关设备电源",
+          "保护现场",
+          "上链存证",
+          "向上级汇报"
+        ],
+        "channels": ["system_log", "email", "sms", "push", "dispatch"],
+        "blockchainRequired": true,
+        "triggerAlert": true,
+        "requireManual": true
+      }
+    },
+    "unknown": {
+      "1": {
+        "code": "GEN-L1",
+        "name": "通用低风险策略",
+        "measures": [
+          "记录日志",
+          "持续监测"
+        ],
+        "channels": ["system_log"],
+        "blockchainRequired": false,
+        "triggerAlert": false,
+        "requireManual": false
+      },
+      "2": {
+        "code": "GEN-L2",
+        "name": "通用中风险策略",
+        "measures": [
+          "记录日志",
+          "邮件通知运维"
+        ],
+        "channels": ["system_log", "email", "sms"],
+        "blockchainRequired": false,
+        "triggerAlert": true,
+        "requireManual": false
+      },
+      "3": {
+        "code": "GEN-L3",
+        "name": "通用高风险策略",
+        "measures": [
+          "记录日志",
+          "短信/推送告警",
+          "人工复核",
+          "上链存证"
+        ],
+        "channels": ["system_log", "email", "sms", "push"],
+        "blockchainRequired": true,
+        "triggerAlert": true,
+        "requireManual": true
+      },
+      "4": {
+        "code": "GEN-L4",
+        "name": "通用紧急风险策略",
+        "measures": [
+          "立即告警",
+          "人工紧急介入",
+          "上链存证",
+          "向上级汇报"
+        ],
+        "channels": ["system_log", "email", "sms", "push", "dispatch"],
+        "blockchainRequired": true,
+        "triggerAlert": true,
+        "requireManual": true
+      }
+    }
+  }
+}

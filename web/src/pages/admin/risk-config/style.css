@@ -1,0 +1,23 @@
+.risk-config-page .stats-row {
+  margin-bottom: 16px;
+}
+
+.risk-config-page .stats-row .ant-card {
+  margin-bottom: 0;
+}
+
+.risk-config-page .filter-card {
+  margin-bottom: 12px;
+}
+
+.risk-config-page .table-card {
+  margin-bottom: 0;
+}
+
+.risk-config-page .ant-tabs {
+  margin-top: 4px;
+}
+
+.risk-config-page .ant-tabs-nav {
+  margin-bottom: 12px;
+}

@@ -1,0 +1,292 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== 用户与权限 ====================
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  email     String?
+  phone     String?
+  realName  String?
+  avatar    String?
+  status    Int      @default(1) // 1-正常 0-禁用
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userRoles  UserRole[]
+  riskEvents RiskEvent[] @relation("HandledBy")
+
+  @@map("users")
+}
+
+model Role {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  name        String
+  description String?
+  status      Int      @default(1)
+  createdAt   DateTime @default(now())
+
+  userRoles       UserRole[]
+  rolePermissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  name        String
+  module      String?
+  description String?
+  createdAt   DateTime @default(now())
+
+  rolePermissions RolePermission[]
+
+  @@map("permissions")
+}
+
+model UserRole {
+  id     String @id @default(cuid())
+  userId String
+  roleId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+  @@map("user_roles")
+}
+
+model RolePermission {
+  id           String @id @default(cuid())
+  roleId       String
+  permissionId String
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+// ==================== 设备数据 ====================
+
+model DeviceData {
+  id           String   @id @default(cuid())
+  deviceId     String
+  voltageA     Decimal? @db.Decimal(10, 2)
+  voltageB     Decimal? @db.Decimal(10, 2)
+  voltageC     Decimal? @db.Decimal(10, 2)
+  currentA     Decimal? @db.Decimal(10, 2)
+  currentB     Decimal? @db.Decimal(10, 2)
+  currentC     Decimal? @db.Decimal(10, 2)
+  activePower  Decimal? @db.Decimal(12, 2)
+  reactivePower Decimal? @db.Decimal(12, 2)
+  temperature  Decimal? @db.Decimal(6, 2)
+  humidity     Decimal? @db.Decimal(6, 2)
+  sf6Pressure  Decimal? @db.Decimal(8, 4)
+  partialDischarge Decimal? @db.Decimal(8, 2)
+  status       Int      @default(0)
+  rawData      Json?
+  recordedAt   DateTime @default(now())
+
+  device Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@index([deviceId, recordedAt])
+  @@map("device_data")
+}
+
+// ==================== 设备 ====================
+
+model Device {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  name        String
+  deviceType  String   // sensor / vehicle / camera
+  location    String?
+  longitude   Decimal? @db.Decimal(10, 7)
+  latitude    Decimal? @db.Decimal(10, 7)
+  status      Int      @default(1) // 1-在线 0-离线
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  riskEvents  RiskEvent[]
+  deviceData  DeviceData[]
+
+  @@map("devices")
+}
+
+// ==================== 风险事件 ====================
+
+model RiskEvent {
+  id            String   @id @default(cuid())
+  riskNo        String   @unique
+  deviceId      String?
+  riskType      String   // overspeed / deviation / collision / restricted_area / unknown
+  riskLevel     Int      // 1-低 2-中 3-高 4-紧急
+  riskScore     Decimal? @db.Decimal(5, 2)
+  title         String
+  description   String?
+  rawData       Json?
+  processedData Json?
+  location      String?
+  longitude     Decimal? @db.Decimal(10, 7)
+  latitude      Decimal? @db.Decimal(10, 7)
+  status        Int      @default(0) // 0-待处理 1-处理中 2-已完成
+  handleResult  String?
+  handledAt     DateTime?
+  handledBy     String?
+  reviewStatus  String?  // PENDING_REVIEW / APPROVED / REJECTED
+  reviewComment String?
+  reviewedBy    String?
+  reviewedAt    DateTime?
+  occurredAt    DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  device         Device?         @relation(fields: [deviceId], references: [id])
+  handler        User?           @relation("HandledBy", fields: [handledBy], references: [id])
+  alertRecords   AlertRecord[]
+  blockchainLogs BlockchainLog[]
+
+  @@index([riskLevel, status])
+  @@index([occurredAt])
+  @@map("risk_events")
+}
+
+// ==================== 风险规则 ====================
+
+model RiskRule {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  name        String
+  riskType    String
+  description String?
+  conditions  Json     // [{field, operator, value}]
+  weight      Decimal  @default(1.0) @db.Decimal(5, 2)
+  priority    Int      @default(0)
+  status      Int      @default(1)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+
+  ruleStrategies RuleStrategy[]
+
+  @@map("risk_rules")
+}
+
+// ==================== 风控策略 ====================
+
+model RiskStrategy {
+  id           String   @id @default(cuid())
+  code         String   @unique
+  name         String
+  description  String?
+  riskLevel    Int      // 1-4 对应风险等级
+  actions      Json     // [{type, config}]
+  notifyConfig Json?
+  status       Int      @default(1)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  deletedAt    DateTime?
+
+  ruleStrategies RuleStrategy[]
+
+  @@map("risk_strategies")
+}
+
+model RuleStrategy {
+  id         String @id @default(cuid())
+  ruleId     String
+  strategyId String
+
+  rule     RiskRule     @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  strategy RiskStrategy @relation(fields: [strategyId], references: [id], onDelete: Cascade)
+
+  @@unique([ruleId, strategyId])
+  @@map("rule_strategies")
+}
+
+// ==================== 预警记录 ====================
+
+model AlertRecord {
+  id          String   @id @default(cuid())
+  riskEventId String
+  alertLevel  Int
+  title       String
+  content     String?
+  channels    Json?    // ["email","sms","push"]
+  status      Int      @default(0) // 0-已发送 1-已确认
+  sentAt      DateTime @default(now())
+  confirmedAt DateTime?
+
+  riskEvent RiskEvent @relation(fields: [riskEventId], references: [id], onDelete: Cascade)
+
+  @@map("alert_records")
+}
+
+// ==================== 区块链存证日志 ====================
+
+model BlockchainLog {
+  id          String   @id @default(cuid())
+  riskEventId String
+  txHash      String?
+  blockNumber BigInt?
+  dataHash    String?
+  status      Int      @default(0) // 0-pending 1-success 2-failed
+  errorMsg    String?
+  createdAt   DateTime @default(now())
+
+  riskEvent RiskEvent @relation(fields: [riskEventId], references: [id], onDelete: Cascade)
+
+  @@map("blockchain_logs")
+}
+
+// ==================== Agent 操作日志 ====================
+
+model AgentLog {
+  id         String   @id @default(cuid())
+  traceId    String
+  agentName  String
+  agentType  String
+  level      String   @default("info")
+  message    String
+  inputData  Json?
+  outputData Json?
+  duration   Int?
+  riskId     String?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@index([traceId])
+  @@index([agentName, createdAt])
+  @@index([level, createdAt])
+  @@index([createdAt])
+  @@map("agent_logs")
+}
+
+// ==================== Agent 配置 ====================
+
+model AgentConfig {
+  id          String   @id @default(cuid())
+  agentType   String   @unique
+  name        String
+  description String?
+  config      Json
+  status      Int      @default(1)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

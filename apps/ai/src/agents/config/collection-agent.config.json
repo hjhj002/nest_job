@@ -1,0 +1,76 @@
+{
+  "agent": {
+    "name": "COLLECTION",
+    "description": "变电站传感器数据采集与预处理智能体",
+    "capabilities": [
+      "sensor_data_collection",
+      "data_validation",
+      "threshold_precheck",
+      "data_normalization"
+    ]
+  },
+  "prompts": {
+    "systemPrompt": "你是一个变电站数据采集专家智能体。你的职责是接收来自变电站设备的原始监测数据，进行数据完整性校验、超阈值初步检测（前置告警过滤）、数据标准化清洗，然后将清洗结果发布给评估智能体。",
+    "validationPrompt": "请校验以下变电站数据是否包含必需的 stationId 或 deviceId 字段",
+    "normalizationPrompt": "请将原始数据标准化为统一格式"
+  },
+  "thresholds": {
+    "voltage": {
+      "overvoltage": 1.1,
+      "undervoltage": 0.9,
+      "description": "电压阈值：额定电压的百分比"
+    },
+    "current": {
+      "overcurrent": 1.2,
+      "description": "电流阈值：额定电流的百分比"
+    },
+    "powerFactor": {
+      "lowPowerFactor": 0.85,
+      "description": "功率因数阈值"
+    },
+    "frequency": {
+      "min": 49.5,
+      "max": 50.5,
+      "description": "频率偏差阈值(Hz)"
+    },
+    "temperature": {
+      "transformerOilTemp": 85,
+      "windingTemp": 105,
+      "switchgearTemp": 70,
+      "criticalTransformerOilTemp": 95,
+      "criticalWindingTemp": 120,
+      "description": "温度阈值(°C)"
+    },
+    "sf6Pressure": {
+      "lowPressure": 0.5,
+      "description": "SF6气压阈值(MPa)"
+    },
+    "partialDischarge": {
+      "threshold": 100,
+      "description": "局部放电阈值(pC)"
+    },
+    "loadRate": {
+      "overload": 90,
+      "warning": 85,
+      "description": "负荷率阈值(%)"
+    }
+  },
+  "anomalyCodes": {
+    "overvoltage": "过电压 >110%",
+    "undervoltage": "欠电压 <90%",
+    "overcurrent": "过流 >120%",
+    "low_power_factor": "功率因数 <0.85",
+    "frequency_deviation": "频率偏差超出±0.5Hz",
+    "transformer_overheat": "变压器油温 >85°C",
+    "winding_overheat": "绕组温度 >105°C",
+    "switchgear_overheat": "开关柜温度 >70°C",
+    "sf6_low_pressure": "SF6气压低 <0.5MPa",
+    "partial_discharge": "局放 >100pC",
+    "overload": "负荷率 >90%",
+    "circuit_breaker_fault": "断路器故障",
+    "isolator_fault": "隔离开关故障",
+    "fire_alarm": "火灾告警",
+    "unauthorized_access": "非授权进入",
+    "misoperation": "误操作告警"
+  }
+}

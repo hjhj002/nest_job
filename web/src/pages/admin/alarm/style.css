@@ -1,0 +1,75 @@
+.alarm-page {
+  padding-bottom: 24px;
+}
+
+.stats-row {
+  margin-bottom: 16px;
+}
+
+.stats-row .ant-card {
+  border-radius: 8px;
+}
+
+.sound-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-card {
+  margin-bottom: 16px;
+  border-radius: 8px;
+}
+
+.table-card {
+  border-radius: 8px;
+}
+
+/* 未读行高亮 - 红色系（明暗通用） */
+.unread-row {
+  /* 用危险红叠加 8% 透明度：亮色下是柔和浅红，暗色下是深邃暗红 */
+  background: color-mix(in srgb, var(--ant-color-error) 8%, transparent);
+  font-weight: 500;
+}
+
+.unread-row:hover {
+  /* 悬停时透明度提升到 15%，红色反馈更明确 */
+  background: color-mix(in srgb, var(--ant-color-error) 15%, transparent) !important;
+}
+
+/* 告警详情 */
+.alert-detail {
+  padding: 16px 0;
+}
+
+.alert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.alert-content {
+  background: #f5f5f5;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.alert-timeline {
+  margin-top: 24px;
+}
+
+/* 告警级别样式 */
+.alert-critical {
+  border-left: 4px solid #ff4d4f;
+}
+
+.alert-warning {
+  border-left: 4px solid #faad14;
+}
+
+.alert-info {
+  border-left: 4px solid #1890ff;
+}

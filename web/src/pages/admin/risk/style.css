@@ -1,0 +1,57 @@
+.risk-page {
+  padding-bottom: 24px;
+}
+
+.stats-row {
+  margin-bottom: 16px;
+}
+
+.stats-row .ant-card {
+  border-radius: 8px;
+}
+
+.filter-card {
+  margin-bottom: 16px;
+  border-radius: 8px;
+}
+
+.table-card {
+  border-radius: 8px;
+}
+
+/* 高风险行高亮 */
+.risk-high-row {
+  background: #fff1f0;
+}
+
+/* 中风险行 */
+.risk-medium-row {
+  background: #fff7e6;
+}
+
+.risk-detail {
+  padding: 16px 0;
+}
+
+.timeline-section {
+  margin-top: 24px;
+}
+
+.timeline-section .ant-timeline {
+  margin-top: 16px;
+}
+
+/* 风险等级标签 */
+.risk-level-high {
+  color: #ff4d4f;
+  font-weight: bold;
+}
+
+.risk-level-medium {
+  color: #faad14;
+  font-weight: bold;
+}
+
+.risk-level-low {
+  color: #1890ff;
+}
